@@ -1,0 +1,127 @@
+{
+  "name": "smart-planner",
+  "productName": "SMART Planner",
+  "version": "1.0.0",
+  "description": "SMART Planner — Build your day. Build yourself. ابنِ يومك، وابنِ نفسك.",
+  "author": "Ahmed Kilwa",
+  "license": "UNLICENSED",
+  "private": true,
+  "main": "dist-electron/electron/main/index.js",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"wait-on tcp:5173 && npm run dev:electron\"",
+    "dev:electron": "npm run rebuild:electron && npm run build:electron && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron .",
+    "build": "npm run typecheck && npm run build:renderer && npm run build:electron",
+    "build:renderer": "vite build",
+    "build:electron": "tsc -p tsconfig.electron.json",
+    "typecheck": "tsc --noEmit",
+    "dev:web": "vite",
+    "preview": "vite preview",
+    "dist": "node scripts/dist-native.cjs && npm run build && electron-builder --win nsis portable",
+    "dist:dir": "npm run build && electron-builder --dir",
+    "build:mobile": "node scripts/prepare-mobile.cjs",
+    "cap:add-android": "npx cap add android",
+    "cap:add-ios": "npx cap add ios",
+    "cap:sync": "npm run build:mobile && npx cap sync",
+    "build:android": "npm run cap:sync && npm run android:gradle",
+    "android:gradle": "JAVA_HOME=${JAVA_HOME:-$HOME/jdk/current} ANDROID_HOME=${ANDROID_HOME:-$HOME/android-sdk} ANDROID_SDK_ROOT=${ANDROID_SDK_ROOT:-$HOME/android-sdk} ./android/gradlew -p android assembleDebug",
+    "build:ios": "npm run cap:sync && npx cap open ios",
+    "start": "npm run rebuild:electron && npm run build:electron && electron .",
+    "test": "vitest run",
+    "test:electron": "ELECTRON_RUN_AS_NODE=1 electron node_modules/vitest/vitest.mjs run",
+    "rebuild:node": "npm rebuild better-sqlite3",
+    "rebuild:electron": "electron-rebuild -f -w better-sqlite3"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.1",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/browser": "^8.0.4",
+    "@capacitor/core": "^8.5.1",
+    "@capacitor/ios": "^8.5.1",
+    "@capacitor/local-notifications": "^8.3.1",
+    "@capacitor/splash-screen": "^8.0.2",
+    "@capacitor/status-bar": "^8.0.3",
+    "@fontsource-variable/inter": "^5.0.18",
+    "@fontsource/vazirmatn": "^5.0.18",
+    "better-sqlite3": "^11.3.0",
+    "date-fns": "^3.6.0",
+    "i18next": "^23.11.5",
+    "lucide-react": "^0.408.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-hook-form": "^7.51.5",
+    "react-i18next": "^14.1.2",
+    "recharts": "^2.12.7",
+    "zod": "^3.23.8",
+    "zustand": "^4.5.2"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.1",
+    "@electron/rebuild": "^4.2.0",
+    "@types/better-sqlite3": "^7.6.11",
+    "@types/node": "^20.14.9",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.19",
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "electron": "^31.0.2",
+    "electron-builder": "^24.13.3",
+    "postcss": "^8.4.39",
+    "tailwindcss": "^3.4.4",
+    "typescript": "^5.5.3",
+    "vite": "^5.3.3",
+    "vitest": "^1.6.0",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.ahmedkilwa.app",
+    "productName": "SMART Planner",
+    "artifactName": "SMART Planner-${version}.${ext}",
+    "files": [
+      "dist/**/*",
+      "dist-electron/**/*",
+      "!**/release"
+    ],
+    "asar": true,
+    "npmRebuild": false,
+    "asarUnpack": [
+      "**/node_modules/better-sqlite3/**"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "extraResources": [
+      {
+        "from": "assets",
+        "to": "assets",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "SMART Planner"
+    },
+    "portable": {
+      "artifactName": "SMART Planner_Portable.exe"
+    },
+    "win": {
+      "icon": "assets/icon.ico",
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    }
+  },
+  "allowScripts": {
+    "better-sqlite3@11.10.0": true,
+    "electron@31.7.7": true,
+    "esbuild@0.21.5": true
+  }
+}

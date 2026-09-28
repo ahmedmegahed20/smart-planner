@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- SMART Planner identity: Indigo / Violet / Blue (same brand colors in dark) -->
+    <color name="colorPrimary">#6366F1</color>
+    <color name="colorPrimaryDark">#4F46E5</color>
+    <color name="colorAccent">#A78BFA</color>
+    <color name="colorPrimaryVariant">#8B5CF6</color>
+    <color name="colorSecondary">#60A5FA</color>
+
+    <!-- Brand background -->
+    <color name="brandIndigo">#1E1B4B</color>
+    <color name="brandNavy">#0B1022</color>
+    <color name="brandNavyDeep">#070B17</color>
+
+    <!-- Dark surfaces (Night theme) -->
+    <color name="windowBackground">#0B1022</color>
+    <color name="surfaceBackground">#101A31</color>
+    <color name="surfaceCard">#101A31</color>
+    <color name="textPrimary">#F8FAFC</color>
+    <color name="textSecondary">#94A3B8</color>
+    <color name="outlineColor">#24375F</color>
+
+    <!-- Task / status semantic colors -->
+    <color name="taskCompleted">#34D399</color>
+    <color name="taskIncomplete">#FBBF24</color>
+    <color name="priorityP1">#F87171</color>
+    <color name="priorityP2">#FBBF24</color>
+    <color name="priorityP3">#60A5FA</color>
+    <color name="priorityP4">#94A3B8</color>
+    <color name="alertColor">#FBBF24</color>
+    <color name="errorColor">#F87171</color>
+</resources>

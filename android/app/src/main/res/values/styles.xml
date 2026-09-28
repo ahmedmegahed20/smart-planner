@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Base application theme: follows the system Light/Dark setting. -->
+    <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/windowBackground</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar" parent="AppTheme">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <!--
+      Launch theme for the activity.
+
+      MUST descend from Theme.AppCompat: MainActivity extends BridgeActivity
+      extends AppCompatActivity, and AppCompat validates the activity theme in
+      onCreate and throws
+        IllegalStateException: You need to use a Theme.AppCompat theme
+        (or descendant) with this activity.
+      if it does not. That throw happens BEFORE BridgeActivity reaches
+      setContentView(), so no WebView is ever created and the window keeps the
+      launch background — a white screen with no UI and no app content.
+
+      Theme.SplashScreen is NOT a valid parent here: its chain ends at
+      android:Theme.DeviceDefault.Light.NoActionBar, not Theme.AppCompat.
+      It was also never usable as one, because the androidx splash contract
+      requires SplashScreen.installSplashScreen() in onCreate() plus a
+      postSplashScreenTheme handoff, and neither was present.
+
+      This is Capacitor's own default: parent="AppTheme" with the splash
+      drawable as the window background. The @capacitor/splash-screen plugin
+      (configured in capacitor.config.ts) owns hiding the launch screen once
+      the WebView has painted, so no androidx splash theme is needed at all.
+    -->
+    <style name="AppTheme.NoActionBarLaunch" parent="AppTheme">
+        <item name="android:background">@drawable/splash</item>
+    </style>
+</resources>

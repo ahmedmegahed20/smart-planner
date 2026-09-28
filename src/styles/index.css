@@ -1,0 +1,273 @@
+/* tokens.css is imported first from main.tsx — it declares every colour
+   custom property on :root that the utilities below resolve against. */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==========================================================================
+   Base
+   ========================================================================== */
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+html {
+  /* Prevent the webview from auto-zooming text on orientation change. */
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--leading-normal);
+  background-color: rgb(var(--c-bg));
+  color: rgb(var(--c-fg));
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* The app owns its own scroll containers; the document itself never scrolls. */
+  overflow: hidden;
+  overscroll-behavior: none;
+  /* Avoid the grey flash on tap that the Android WebView paints by default. */
+  -webkit-tap-highlight-color: transparent;
+}
+
+[dir='rtl'] body,
+[dir='rtl'] {
+  font-family: 'Vazirmatn', var(--font-sans);
+}
+
+[dir='rtl'] .ltr-force {
+  direction: ltr;
+}
+
+/* Arabic numerals stay Western in the timer / metrics for scanability. */
+.num {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* ==========================================================================
+   Native form controls follow the active theme
+   ========================================================================== */
+
+input,
+textarea,
+select,
+button {
+  font: inherit;
+  color: inherit;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: rgb(var(--c-fg-4));
+}
+
+/* Remove the WebView's default yellow autofill / selection chrome. */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-text-fill-color: rgb(var(--c-fg));
+  -webkit-box-shadow: 0 0 0 1000px rgb(var(--c-surface-3)) inset;
+  transition: background-color 9999s ease-in-out 0s;
+}
+
+::selection {
+  background-color: rgb(var(--c-accent) / 0.24);
+  color: rgb(var(--c-fg));
+}
+
+/* ==========================================================================
+   Scrollbars — thin, theme-aware, no layout shift
+   ========================================================================== */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(var(--c-hairline-2)) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--c-hairline-2));
+  border-radius: var(--r-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--c-fg-4));
+}
+
+/* ==========================================================================
+   Focus — one visible, consistent ring everywhere
+   ========================================================================== */
+
+:focus {
+  outline: none;
+}
+
+:focus-visible {
+  outline: 2px solid rgb(var(--c-accent));
+  outline-offset: 2px;
+  border-radius: var(--r-xs);
+}
+
+button:focus-visible,
+a:focus-visible,
+[role='button']:focus-visible {
+  outline: 2px solid rgb(var(--c-accent));
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Content sits under the status bar / above the gesture bar on Android. */
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.pb-safe {
+  padding-bottom: calc(env(safe-area-inset-bottom) + var(--sp-2));
+}
+
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
+
+/* Horizontal rhythm helper used by every screen root. */
+.page-x {
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+@media (min-width: 640px) {
+  :root {
+    --gutter: 1.5rem;
+  }
+}
+
+/* ==========================================================================
+   Motion — short and purposeful only
+   ========================================================================== */
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sheet-up {
+  from { transform: translateY(14px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pop-in {
+  from { transform: scale(0.96); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.anim-fade {
+  animation: fade-in var(--dur-base) var(--ease-out) both;
+}
+
+.anim-rise {
+  animation: rise-in var(--dur-base) var(--ease-out) both;
+}
+
+.anim-sheet {
+  animation: sheet-up var(--dur-base) var(--ease-out) both;
+}
+
+.anim-pop {
+  animation: pop-in var(--dur-fast) var(--ease-out) both;
+}
+
+/* Task completion: a single quiet ring, then settle. */
+@keyframes check-settle {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.12); }
+  100% { transform: scale(1); }
+}
+
+.flash-target {
+  animation: check-settle 240ms var(--ease-out) both;
+}
+
+/* Cross-fade used when the theme changes, so the swap never "pops". */
+@keyframes theme-swap {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+.theme-transition {
+  animation: theme-swap var(--dur-slow) var(--ease-out) both;
+}
+
+/* Staggered entrance for list sections — 4 steps max, never a cascade show. */
+.stagger > * {
+  animation: rise-in var(--dur-base) var(--ease-out) both;
+}
+.stagger > *:nth-child(1) { animation-delay: 0ms; }
+.stagger > *:nth-child(2) { animation-delay: 24ms; }
+.stagger > *:nth-child(3) { animation-delay: 48ms; }
+.stagger > *:nth-child(4) { animation-delay: 72ms; }
+.stagger > *:nth-child(n + 5) { animation-delay: 88ms; }
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ==========================================================================
+   Print / forced-colors sanity
+   ========================================================================== */
+
+@media (forced-colors: active) {
+  .surface,
+  .card {
+    border: 1px solid CanvasText;
+  }
+}

@@ -1,0 +1,510 @@
+/* ==========================================================================
+   SMART Planner — Design Tokens
+   --------------------------------------------------------------------------
+   Single source of truth for the visual language. Every colour in the app is
+   declared here as an RGB triplet so Tailwind's `<alpha-value>` syntax keeps
+   working (`bg-surface/60`, `text-fg-3/80`, ...).
+
+   Adding a theme = copying one `[data-theme='...']` block and retuning it.
+   Nothing else in the codebase needs to change.
+   ========================================================================== */
+
+:root {
+  /* ---- Type ------------------------------------------------------------- */
+  --font-sans: 'Inter Variable', 'Vazirmatn', system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', 'Roboto Mono', Menlo, monospace;
+
+  --text-display: 1.75rem;   /* 28px — screen hero numbers / greeting     */
+  --text-title: 1.3125rem;   /* 21px — page title                        */
+  --text-section: 0.9375rem; /* 15px — section heading                   */
+  --text-body: 0.875rem;     /* 14px — default                           */
+  --text-secondary: 0.8125rem;/* 13px — supporting row                   */
+  --text-caption: 0.6875rem; /* 11px — metadata, overline                */
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.35;
+  --leading-normal: 1.5;
+
+  --tracking-overline: 0.08em;
+
+  /* ---- Space (4px base) ------------------------------------------------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.25rem;
+  --sp-6: 1.5rem;
+  --sp-8: 2rem;
+  --sp-10: 2.5rem;
+  --sp-12: 3rem;
+
+  /* ---- Radius ----------------------------------------------------------- */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 10px;
+  --r-xl: 12px;
+  --r-full: 999px;
+
+  /* ---- Touch target (WCAG / Material minimum) --------------------------- */
+  --tap: 44px;
+
+  /* ---- Motion ----------------------------------------------------------- */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+  --dur-slow: 280ms;
+
+  /* ---- Layout ----------------------------------------------------------- */
+  --gutter: 1rem;
+  --appbar-h: 56px;
+  --tabbar-h: 60px;
+
+  /* =========================================================
+     THEME 1 — Default (light)
+     Warm off-white, restrained indigo accent.
+     ========================================================= */
+  color-scheme: light;
+
+  --c-bg: 247 247 245;          /* page                                   */
+  --c-surface: 255 255 255;     /* cards, sheets                          */
+  --c-surface-2: 255 255 255;   /* raised card                            */
+  --c-surface-3: 246 246 244;   /* inputs, menus                          */
+  --c-sunken: 240 240 237;      /* inset wells                            */
+  --c-hover: 240 240 237;
+  --c-active: 233 233 229;
+
+  --c-hairline: 226 226 222;
+  --c-hairline-2: 210 210 204;
+
+  --c-fg: 22 24 29;
+  --c-fg-2: 74 79 88;
+  --c-fg-3: 110 116 126;
+  --c-fg-4: 154 160 170;
+
+  --c-accent: 75 88 200;
+  --c-accent-2: 58 69 166;      /* accent as text — AA on light surfaces   */
+  --c-accent-soft: 75 88 200;
+  --c-on-accent: 255 255 255;
+
+  --c-success: 21 128 88;
+  --c-success-2: 15 105 71;
+  --c-success-soft: 21 128 88;
+
+  --c-warning: 176 106 12;
+  --c-warning-2: 146 86 6;
+  --c-warning-soft: 176 106 12;
+
+  --c-danger: 190 42 42;
+  --c-danger-2: 168 34 34;
+  --c-danger-soft: 190 42 42;
+
+  --c-info: 21 105 140;
+  --c-info-2: 16 88 120;
+
+  --c-p1: 190 42 42;
+  --c-p2: 176 106 12;
+  --c-p3: 75 88 200;
+  --c-p4: 130 136 148;
+
+  --c-track: 231 231 227;
+  --c-overlay: 28 30 36;
+
+  --shadow-1: 0 1px 2px rgb(20 22 28 / 0.05);
+  --shadow-2: 0 1px 3px rgb(20 22 28 / 0.07), 0 6px 16px -6px rgb(20 22 28 / 0.09);
+  --shadow-3: 0 8px 28px -8px rgb(20 22 28 / 0.18);
+
+  /* Android status bar / splash */
+}
+
+/* =========================================================
+   THEME 2 — Midnight
+   Near-black charcoal, calm desaturated blue accent.
+   ========================================================= */
+:root[data-theme='midnight'] {
+  color-scheme: dark;
+
+  --c-bg: 14 16 19;
+  --c-surface: 21 24 28;
+  --c-surface-2: 27 31 36;
+  --c-surface-3: 35 40 46;
+  --c-sunken: 10 12 14;
+  --c-hover: 33 37 43;
+  --c-active: 41 46 53;
+
+  --c-hairline: 40 45 52;
+  --c-hairline-2: 54 60 68;
+
+  --c-fg: 232 234 237;
+  --c-fg-2: 168 174 184;
+  --c-fg-3: 124 131 142;
+  --c-fg-4: 90 96 106;
+
+  --c-accent: 96 132 232;
+  --c-accent-2: 143 170 243;
+  --c-accent-soft: 96 132 232;
+  --c-on-accent: 255 255 255;
+
+  --c-success: 52 168 116;
+  --c-success-2: 111 192 138;
+  --c-success-soft: 52 168 116;
+
+  --c-warning: 208 152 60;
+  --c-warning-2: 224 167 94;
+  --c-warning-soft: 208 152 60;
+
+  --c-danger: 224 92 92;
+  --c-danger-2: 240 138 138;
+  --c-danger-soft: 224 92 92;
+
+  --c-info: 72 158 210;
+  --c-info-2: 111 194 228;
+
+  --c-p1: 240 138 138;
+  --c-p2: 224 167 94;
+  --c-p3: 143 170 243;
+  --c-p4: 124 131 142;
+
+  --c-track: 38 43 50;
+  --c-overlay: 0 0 0;
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
+  --shadow-2: 0 1px 3px rgb(0 0 0 / 0.45), 0 6px 16px -6px rgb(0 0 0 / 0.5);
+  --shadow-3: 0 8px 28px -8px rgb(0 0 0 / 0.6);
+
+}
+
+/* =========================================================
+   THEME 3 — Forest
+   Deep green productivity surface, muted sage accent.
+   ========================================================= */
+:root[data-theme='forest'] {
+  color-scheme: dark;
+
+  --c-bg: 11 16 13;
+  --c-surface: 18 25 20;
+  --c-surface-2: 24 33 27;
+  --c-surface-3: 31 42 34;
+  --c-sunken: 8 12 10;
+  --c-hover: 29 40 32;
+  --c-active: 36 49 39;
+
+  --c-hairline: 35 48 40;
+  --c-hairline-2: 48 64 53;
+
+  --c-fg: 230 237 232;
+  --c-fg-2: 165 181 170;
+  --c-fg-3: 122 139 128;
+  --c-fg-4: 88 102 88;
+
+  --c-accent: 84 158 118;
+  --c-accent-2: 123 196 154;
+  --c-accent-soft: 84 158 118;
+  --c-on-accent: 8 20 13;
+
+  --c-success: 96 176 130;
+  --c-success-2: 140 204 170;
+  --c-success-soft: 96 176 130;
+
+  --c-warning: 200 156 66;
+  --c-warning-2: 220 178 100;
+  --c-warning-soft: 200 156 66;
+
+  --c-danger: 214 96 92;
+  --c-danger-2: 236 140 134;
+  --c-danger-soft: 214 96 92;
+
+  --c-info: 92 168 200;
+  --c-info-2: 130 196 222;
+
+  --c-p1: 236 140 134;
+  --c-p2: 220 178 100;
+  --c-p3: 123 196 154;
+  --c-p4: 122 139 128;
+
+  --c-track: 32 45 37;
+  --c-overlay: 0 0 0;
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.42);
+  --shadow-2: 0 1px 3px rgb(0 0 0 / 0.45), 0 6px 16px -6px rgb(0 0 0 / 0.5);
+  --shadow-3: 0 8px 28px -8px rgb(0 0 0 / 0.62);
+
+}
+
+/* =========================================================
+   THEME 4 — Ocean
+   Deep blue, cyan-leaning accent. No neon.
+   ========================================================= */
+:root[data-theme='ocean'] {
+  color-scheme: dark;
+
+  --c-bg: 10 16 22;
+  --c-surface: 16 24 32;
+  --c-surface-2: 22 33 43;
+  --c-surface-3: 29 43 55;
+  --c-sunken: 7 12 17;
+  --c-hover: 26 38 49;
+  --c-active: 33 47 60;
+
+  --c-hairline: 30 44 56;
+  --c-hairline-2: 42 60 74;
+
+  --c-fg: 228 236 243;
+  --c-fg-2: 163 180 194;
+  --c-fg-3: 116 137 154;
+  --c-fg-4: 82 101 114;
+
+  --c-accent: 62 154 196;
+  --c-accent-2: 111 194 228;
+  --c-accent-soft: 62 154 196;
+  --c-on-accent: 6 18 26;
+
+  --c-success: 52 168 116;
+  --c-success-2: 111 192 138;
+  --c-success-soft: 52 168 116;
+
+  --c-warning: 208 152 60;
+  --c-warning-2: 224 167 94;
+  --c-warning-soft: 208 152 60;
+
+  --c-danger: 224 92 92;
+  --c-danger-2: 240 138 138;
+  --c-danger-soft: 224 92 92;
+
+  --c-info: 62 154 196;
+  --c-info-2: 111 194 228;
+  --c-info-soft: 62 154 196;
+
+  --c-p1: 240 138 138;
+  --c-p2: 224 167 94;
+  --c-p3: 111 194 228;
+  --c-p4: 116 137 154;
+
+  --c-track: 27 40 51;
+  --c-overlay: 0 0 0;
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.42);
+  --shadow-2: 0 1px 3px rgb(0 0 0 / 0.45), 0 6px 16px -6px rgb(0 0 0 / 0.5);
+  --shadow-3: 0 8px 28px -8px rgb(0 0 0 / 0.62);
+
+}
+
+/* =========================================================
+   THEME 5 — Sunset
+   Warm terracotta accent on quiet warm-charcoal surfaces.
+   ========================================================= */
+:root[data-theme='sunset'] {
+  color-scheme: dark;
+
+  --c-bg: 20 15 12;
+  --c-surface: 28 22 19;
+  --c-surface-2: 36 28 23;
+  --c-surface-3: 44 35 28;
+  --c-sunken: 15 11 9;
+  --c-hover: 40 31 25;
+  --c-active: 49 39 31;
+
+  --c-hairline: 48 38 31;
+  --c-hairline-2: 64 51 41;
+
+  --c-fg: 240 232 226;
+  --c-fg-2: 192 178 168;
+  --c-fg-3: 149 133 122;
+  --c-fg-4: 110 96 85;
+
+  --c-accent: 194 112 60;
+  --c-accent-2: 224 154 99;
+  --c-accent-soft: 194 112 60;
+  --c-on-accent: 26 16 10;
+
+  --c-success: 132 168 96;
+  --c-success-2: 168 200 132;
+  --c-success-soft: 132 168 96;
+
+  --c-warning: 208 152 60;
+  --c-warning-2: 228 184 112;
+  --c-warning-soft: 208 152 60;
+
+  --c-danger: 214 96 92;
+  --c-danger-2: 238 144 136;
+  --c-danger-soft: 214 96 92;
+
+  --c-info: 88 152 200;
+  --c-info-2: 130 184 222;
+
+  --c-p1: 238 144 136;
+  --c-p2: 228 184 112;
+  --c-p3: 224 154 99;
+  --c-p4: 149 133 122;
+
+  --c-track: 41 32 26;
+  --c-overlay: 0 0 0;
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.42);
+  --shadow-2: 0 1px 3px rgb(0 0 0 / 0.45), 0 6px 16px -6px rgb(0 0 0 / 0.5);
+  --shadow-3: 0 8px 28px -8px rgb(0 0 0 / 0.62);
+
+}
+
+/* =========================================================
+   THEME 6 — Mono
+   Greyscale only. Accent is a light neutral, not a hue.
+   ========================================================= */
+:root[data-theme='mono'] {
+  color-scheme: dark;
+
+  --c-bg: 11 11 11;
+  --c-surface: 18 18 18;
+  --c-surface-2: 24 24 24;
+  --c-surface-3: 31 31 31;
+  --c-sunken: 8 8 8;
+  --c-hover: 30 30 30;
+  --c-active: 38 38 38;
+
+  --c-hairline: 37 37 37;
+  --c-hairline-2: 52 52 52;
+
+  --c-fg: 237 237 237;
+  --c-fg-2: 168 168 168;
+  --c-fg-3: 122 122 122;
+  --c-fg-4: 86 86 86;
+
+  --c-accent: 208 208 208;
+  --c-accent-2: 240 240 240;
+  --c-accent-soft: 208 208 208;
+  --c-on-accent: 14 14 14;
+
+  --c-success: 168 168 168;
+  --c-success-2: 208 208 208;
+  --c-success-soft: 168 168 168;
+
+  --c-warning: 200 200 200;
+  --c-warning-2: 226 226 226;
+  --c-warning-soft: 200 200 200;
+
+  --c-danger: 200 200 200;
+  --c-danger-2: 232 232 232;
+  --c-danger-soft: 200 200 200;
+
+  --c-info: 180 180 180;
+  --c-info-2: 216 216 216;
+  --c-info-soft: 180 180 180;
+
+  --c-p1: 240 240 240;
+  --c-p2: 208 208 208;
+  --c-p3: 180 180 180;
+  --c-p4: 122 122 122;
+
+  --c-track: 33 33 33;
+  --c-overlay: 0 0 0;
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.5);
+  --shadow-2: 0 1px 3px rgb(0 0 0 / 0.5), 0 6px 16px -6px rgb(0 0 0 / 0.55);
+  --shadow-3: 0 8px 28px -8px rgb(0 0 0 / 0.7);
+
+}
+
+/* =========================================================
+   THEME 7 — Lavender
+   Muted violet. Deliberately desaturated — not AI-neon purple.
+   ========================================================= */
+:root[data-theme='lavender'] {
+  color-scheme: dark;
+
+  --c-bg: 16 14 22;
+  --c-surface: 23 20 32;
+  --c-surface-2: 30 26 41;
+  --c-surface-3: 38 33 52;
+  --c-sunken: 12 10 17;
+  --c-hover: 35 30 47;
+  --c-active: 44 38 58;
+
+  --c-hairline: 41 36 55;
+  --c-hairline-2: 56 49 74;
+
+  --c-fg: 234 231 242;
+  --c-fg-2: 173 167 192;
+  --c-fg-3: 133 127 155;
+  --c-fg-4: 97 92 116;
+
+  --c-accent: 126 107 184;
+  --c-accent-2: 168 151 222;
+  --c-accent-soft: 126 107 184;
+  --c-on-accent: 12 10 20;
+
+  --c-success: 84 172 130;
+  --c-success-2: 128 202 164;
+  --c-success-soft: 84 172 130;
+
+  --c-warning: 202 152 76;
+  --c-warning-2: 222 178 114;
+  --c-warning-soft: 202 152 76;
+
+  --c-danger: 216 104 116;
+  --c-danger-2: 238 150 158;
+  --c-danger-soft: 216 104 116;
+
+  --c-info: 116 152 214;
+  --c-info-2: 154 184 234;
+
+  --c-p1: 238 150 158;
+  --c-p2: 222 178 114;
+  --c-p3: 168 151 222;
+  --c-p4: 133 127 155;
+
+  --c-track: 36 31 49;
+  --c-overlay: 0 0 0;
+
+  --shadow-1: 0 1px 2px rgb(0 0 0 / 0.42);
+  --shadow-2: 0 1px 3px rgb(0 0 0 / 0.45), 0 6px 16px -6px rgb(0 0 0 / 0.5);
+  --shadow-3: 0 8px 28px -8px rgb(0 0 0 / 0.62);
+
+}
+
+/* ------------------------------------------------------------------
+   `system` resolves to Default (light) or Midnight (dark).
+   The attribute on <html> is always a concrete theme id, so a media
+   query here is only a safety net for the very first paint.
+   ------------------------------------------------------------------ */
+@media (prefers-color-scheme: dark) {
+  :root[data-theme='system'] {
+    color-scheme: dark;
+    --c-bg: 14 16 19;
+    --c-surface: 21 24 28;
+    --c-surface-2: 27 31 36;
+    --c-surface-3: 35 40 46;
+    --c-sunken: 10 12 14;
+    --c-hover: 33 37 43;
+    --c-active: 41 46 53;
+    --c-hairline: 40 45 52;
+    --c-hairline-2: 54 60 68;
+    --c-fg: 232 234 237;
+    --c-fg-2: 168 174 184;
+    --c-fg-3: 124 131 142;
+    --c-fg-4: 90 96 106;
+    --c-accent: 96 132 232;
+    --c-accent-2: 143 170 243;
+    --c-accent-soft: 96 132 232;
+    --c-on-accent: 255 255 255;
+    --c-success: 52 168 116;
+    --c-success-2: 111 192 138;
+    --c-success-soft: 52 168 116;
+    --c-warning: 208 152 60;
+    --c-warning-2: 224 167 94;
+    --c-warning-soft: 208 152 60;
+    --c-danger: 224 92 92;
+    --c-danger-2: 240 138 138;
+    --c-danger-soft: 224 92 92;
+    --c-info: 72 158 210;
+    --c-info-2: 111 194 228;
+    --c-p1: 240 138 138;
+    --c-p2: 224 167 94;
+    --c-p3: 143 170 243;
+    --c-p4: 124 131 142;
+    --c-track: 38 43 50;
+    --c-overlay: 0 0 0;
+    --shadow-1: 0 1px 2px rgb(0 0 0 / 0.4);
+    --shadow-2: 0 1px 3px rgb(0 0 0 / 0.45), 0 6px 16px -6px rgb(0 0 0 / 0.5);
+    --shadow-3: 0 8px 28px -8px rgb(0 0 0 / 0.6);
+  }
+}

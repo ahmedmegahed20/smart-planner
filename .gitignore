@@ -1,0 +1,80 @@
+# ---------------------------------------------------------------------------
+# Dependencies
+# ---------------------------------------------------------------------------
+node_modules/
+
+# ---------------------------------------------------------------------------
+# Build output — never commit generated bundles
+# ---------------------------------------------------------------------------
+dist/
+dist-electron/
+release/
+out/
+coverage/
+*.tsbuildinfo
+
+# Capacitor copies the built web app into the native projects on every
+# `npm run cap:sync`. These are generated, not source.
+android/app/src/main/assets/public/
+ios/App/App/public/
+
+# Gradle / Android build state
+android/.gradle/
+android/build/
+android/app/build/
+android/local.properties
+android/.idea/
+*.iml
+
+# ---------------------------------------------------------------------------
+# Logs
+# ---------------------------------------------------------------------------
+*.log
+npm-debug.log*
+yarn-error.log*
+
+# ---------------------------------------------------------------------------
+# Editor / OS noise
+# ---------------------------------------------------------------------------
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# ---------------------------------------------------------------------------
+# Local env
+# ---------------------------------------------------------------------------
+*.local
+.env
+.env.*
+!.env.example
+
+# ---------------------------------------------------------------------------
+# SIGNING CREDENTIALS — NEVER COMMIT
+#
+# A leaked release keystore lets an attacker ship an update that Android
+# accepts as this app, which is unrecoverable without a new application id.
+# ---------------------------------------------------------------------------
+*.jks
+*.keystore
+*.p12
+*.pfx
+*.pem
+*.key
+*.der
+*.csr
+keystore.properties
+key.properties
+signing.properties
+google-services.json
+GoogleService-Info.plist
+# ---------------------------------------------------------------------------
+# Local scratch files – generated during icon/QA work in Sep 2026.
+# Everything referencing them (app icons, source images, reports) is either
+# already baked into android/ios assets or not needed to build. Kept on disk
+# only; never committed. Remove this block if you ever want them in the repo.
+# ---------------------------------------------------------------------------
+APP-ICON-REPORT.md
+COMPLETION-AUDIT-FINAL.md
+/logo.jpg
+/logo11.jpg
