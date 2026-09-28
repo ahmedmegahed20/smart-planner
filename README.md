@@ -1,12 +1,55 @@
 # SMART Planner — بنِ يومك، وابنِ نفسك
 
-Offline-first productivity app: tasks, habits, goals, projects, routines, focus
-sessions, mood, journal, notes, calendar, inbox, achievements and analytics.
+An offline-first productivity app: tasks, habits, goals, projects, routines,
+focus sessions, mood, journal, notes, calendar, inbox, achievements and
+analytics — all in one place, from one shared React codebase.
 
-Ships as an **Android app** (Capacitor) and a **Windows/Linux/macOS desktop
-app** (Electron) from one shared React codebase, with English LTR and Arabic RTL.
+Ships as an **Android app** (Capacitor) and a **Windows / Linux / macOS desktop
+app** (Electron), fully bilingual (English LTR + Arabic RTL).
 
-## Tech Stack
+No account. No cloud. No ads. Your data stays on your device.
+
+---
+
+## Screenshots
+
+### Default (light)
+
+| Dashboard | Tasks | Calendar |
+|---|---|---|
+| <img src="docs/screenshots/dashboard.png" alt="Dashboard" width="270"/> | <img src="docs/screenshots/tasks.png" alt="Tasks" width="270"/> | <img src="docs/screenshots/calendar.png" alt="Calendar" width="270"/> |
+
+| Goals | Daily progress | Today |
+|---|---|---|
+| <img src="docs/screenshots/goals.png" alt="Goals" width="270"/> | <img src="docs/screenshots/daily-progress.png" alt="Daily progress" width="270"/> | <img src="docs/screenshots/today.png" alt="Today" width="270"/> |
+
+### Midnight theme
+
+| Appearance & themes | Dashboard in dark |
+|---|---|
+| <img src="docs/screenshots/theme-midnight.png" alt="Themes screen in Midnight" width="270"/> | <img src="docs/screenshots/dark-dashboard.png" alt="Dark dashboard" width="270"/> |
+
+---
+
+## Features
+
+- **Tasks** — priorities, due dates, recurring schedules, search and filtering.
+- **Habits** — build streaks with today/calendar consistency tracking.
+- **Goals** — break big goals into measurable steps (SMART-style planning).
+- **Projects & routines** — structured work and repeatable daily/weekly blocks.
+- **Focus sessions** — timers plus analytics: daily progress, monthly goals,
+  focus distribution and streaks.
+- **Today view** — your day at a glance, with an optional Islamic (Hijri) date
+  shown in the Arabic locale.
+- **Calendar & inbox** — plan events and capture thoughts instantly.
+- **Mood, journal, notes, achievements** — track the rest of your life too.
+- **Notifications** — local scheduling, no external services.
+- **7 themes + system** — `default`, `midnight`, `forest`, `ocean`, `sunset`,
+  `mono`, `lavender`, each a pure design-token swap.
+- **Tailored mobile experience** — immersive edge-to-edge UI, predictive-back
+  navigation and a proper back stack that closes dialogs before leaving the app.
+
+## Tech stack
 
 | Layer | Technology |
 |---|---|
@@ -22,28 +65,31 @@ app** (Electron) from one shared React codebase, with English LTR and Arabic RTL
 | Mobile DB | IndexedDB via `mobile/shim.js` |
 | Tests | Vitest |
 
-## Setup
+## Platforms
+
+- **Android** — Capacitor native project (source committed under `android/`).
+- **Desktop** — Electron for Windows / Linux / macOS (`better-sqlite3`).
+- **Web** — the renderer runs in a plain browser for local development.
+
+## Getting started
 
 ```bash
 npm install
+
+npm run dev            # Electron + Vite dev server
+npm run dev:web        # renderer only, in the browser
+npm run build          # typecheck + renderer + electron main
+npm start              # run the built desktop app
+npm test               # run the test suite
 ```
 
-## Running
-
-```bash
-npm run dev        # Electron + Vite dev server
-npm run dev:web    # renderer only (see "Web development" below)
-npm run build      # typecheck + renderer + electron main
-npm start          # run the built desktop app
-```
-
-## Android
+## Android build
 
 ```bash
 npm run build:android   # build:mobile -> cap sync -> gradle assembleDebug
 ```
 
-This produces:
+Produces:
 
 ```
 android/app/build/outputs/apk/debug/app-debug.apk
@@ -56,17 +102,17 @@ android/app/build/outputs/apk/debug/app-debug.apk
 2. `cap:sync` — copies the web build into the native projects.
 3. `android:gradle` — `assembleDebug` via the Gradle wrapper.
 
-Requires a JDK and the Android SDK. `android:gradle` defaults to
-`~/jdk/current` and `~/android-sdk`; override with `JAVA_HOME` / `ANDROID_HOME`.
+Requires a JDK and the Android SDK (defaults to `~/jdk/current` and
+`~/android-sdk`; override with `JAVA_HOME` / `ANDROID_HOME`).
 
 ### Release signing
 
 Release signing reads credentials from `android/app/keystore.properties`, which
 is **git-ignored along with `*.jks` / `*.keystore`**. Without that file the
-release build type simply skips signing, so debug builds and CI both work
-without secrets present.
+release build type simply skips signing, so debug builds and CI work without
+secrets present.
 
-To set up release signing, create the file locally:
+To set up signing, create the file locally:
 
 ```properties
 storeFile=keystore/your-release.jks
@@ -75,65 +121,10 @@ keyAlias=...
 keyPassword=...
 ```
 
-**Never commit the keystore or its passwords.** A leaked release key lets anyone
-ship an update that Android accepts as this app.
+**Never commit the keystore or its passwords.** A leaked release key lets
+anyone ship an update the Play Store accepts as this app.
 
-### Android runtime behaviour
-
-- **Immersive / edge-to-edge** — `MainActivity` uses
-  `WindowCompat.setDecorFitsSystemWindows(false)`, hides the system bars via
-  `WindowInsetsControllerCompat`, and re-applies on window focus so the bars
-  do not reappear after dialogs. The status bar is set to
-  `overlay: true` so the WebView can paint under it. `viewport-fit=cover` plus
-  `LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES` handle notches.
-- **Back behaviour** — resolved in priority order:
-  1. topmost overlay / dialog / bottom sheet,
-  2. route history (`src/lib/app.ts`),
-  3. `moveTaskToBack()` at the root (Android) or browser history on web.
-
-  Sheets register handlers through the LIFO registry in `src/lib/back.ts`;
-  `SheetShell` wires this up for Modals, Dialogs and pickers.
-- **Predictive back** — the manifest sets
-  `android:enableOnBackInvokedCallback="true"` so Android 13+ delivers back
-  through `OnBackInvokedDispatcher` instead of the deprecated
-  `onBackPressed` path. Without it the system logs
-  `OnBackInvokedCallback is not enabled for the application` and the
-  transition animation is skipped.
-
-## Web development
-
-`npm run dev:web` serves the renderer without the Electron shell. The renderer
-only ever talks to `window.ahmedAPI` (see `src/lib/api.ts`), which each host
-provides:
-
-- `electron/preload.ts` — IPC bridge to the better-sqlite3 engines,
-- `mobile/shim.js` — the same channel surface backed by IndexedDB.
-
-So a served `dist/` build (which includes the shim) runs end-to-end in a plain
-browser. The first launch is gated by onboarding; clear site data to replay it.
-
-## Testing
-
-```bash
-npm test
-```
-
-203 tests across 13 files (Vitest), covering the engines, the mobile shim,
-date utilities, notifications, onboarding persistence, UI primitives, task
-search/filtering, and navigation/back-stack behaviour.
-
-## Data
-
-Desktop data lives in `~/.ahmed-kilwa/ahmed-kilwa.db`. Override for development:
-
-```bash
-AHMED_KILWA_DATA_DIR=/tmp/my-dev-data npm run dev
-```
-
-Android data lives in the app's private WebView storage (IndexedDB). Uninstalling
-the app removes it.
-
-## Project Structure
+## Architecture
 
 ```
 electron/           # desktop main process
@@ -143,56 +134,44 @@ electron/           # desktop main process
 mobile/
   shim.js           # same API surface over IndexedDB, for Capacitor/web
 src/                # React renderer
-  components/
-    layout/         # Sidebar, Topbar, CommandPalette, QuickCapture
-    ui/             # primitives.tsx (Card, Section, SheetShell), icons.tsx
+  components/       # layout + UI primitives
   i18n/             # en.ts, ar.ts
-   lib/              # api.ts, data.ts, app.ts (page + history state), back.ts
-   pages/            # page components, code-split via React.lazy
-   store/            # zustand stores (settings, notifications, view)
-   styles/           # tokens.css — semantic theme variables
-android/            # Capacitor Android project (native source is committed)
+  lib/              # api.ts, data.ts, app.ts, back.ts
+  pages/            # page components, code-split via React.lazy
+  store/            # zustand stores
+  styles/           # tokens.css — semantic theme variables
+android/            # Capacitor Android project
 ios/                # Capacitor iOS project
 scripts/
-  prepare-mobile.cjs  # mobile build pipeline
-  dist-native.cjs     # desktop packaging
 tests/              # Vitest suites
 ```
 
-### Business logic
+The renderer never touches storage directly — it talks to `window.ahmedAPI`
+(`src/lib/api.ts`), which the Electron preload or the mobile shim provides. The
+data layer (`electron/engines/*`, `electron/db/*`, `mobile/shim.js`) is shared
+across every platform.
 
-`electron/engines/*`, `electron/db/*` and `mobile/shim.js` hold the data layer
-and are shared by every platform. UI work should not need changes here.
+On Android the app uses immersive edge-to-edge rendering, hides the system bars,
+and re-applies that on window focus. Back navigation resolves in priority order:
+topmost overlay → route history → `moveTaskToBack()`, and the manifest enables
+Android 13+ predictive-back through the `OnBackInvokedDispatcher`.
 
 ## Theming
 
-Seven themes ship in `src/styles/tokens.css`: `default`, `midnight`, `forest`,
-`ocean`, `sunset`, `mono` and `lavender`, plus `system`, which follows
-`prefers-color-scheme`. Themes are pure token swaps — components reference
-semantic variables rather than literal colors, and native chrome is re-synced
-when the active theme changes.
+Semantic tokens in `src/styles/tokens.css` drive every component — no literal
+colors in UI code. Theme changes are pure token swaps, and native chrome is
+re-synced when the active theme changes. The shell's app bar is the single
+source of a page title, so views never duplicate their own heading.
 
-The shell's app bar is the single source of a page's title. A `PageHeader`
-that would repeat it verbatim drops its own heading (see `src/lib/shellTitle.ts`),
-so each view has one `<h1>` instead of two stacked copies of the same words.
-Headers that carry real extra information — a date, a count, a name — are
-always kept.
+## Data
 
-Two legacy pages (`DailyProgress`, `MonthlyGoals`) style themselves with inline
-styles, so their palette is expressed as `rgb(var(--c-…))` references rather
-than literal hex. Custom properties resolve at paint time, which keeps those
-pages on-theme with no extra render.
+- Desktop: `~/.ahmed-kilwa/ahmed-kilwa.db` (override with
+  `AHMED_KILWA_DATA_DIR`).
+- Android/Web: the device's private WebView storage (IndexedDB). Uninstalling
+  the app removes it.
 
-## Windows Installer
-
-```bash
-npm run dist
-```
-
-Produces NSIS and portable executables in `release/`. Must run on Windows or in
-CI with Windows targets; electron-builder cannot cross-compile Windows from
-Linux.
+---
 
 ## License
 
-Unlicensed / proprietary. No license is granted for reuse.
+Proprietary. All rights reserved. No license is granted for reuse.
