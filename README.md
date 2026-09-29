@@ -85,44 +85,110 @@ npm test               # run the test suite
 
 ## Android build
 
+### Prerequisites
+
+| Tool | Version | Notes |
+|---|---|---|
+| Node.js | 20 LTS or newer | only for building the web bundle |
+| JDK | **17 or newer, 21 recommended** | Android Gradle Plugin 8.13 sets Java 21 source/target |
+| Android SDK | platform **36** + build-tools 36 | `compileSdk`/`targetSdk` are 36 |
+| Gradle | *not needed* | the wrapper (`gradle/wrapper/`) pins 8.14.3 |
+
+The Gradle wrapper is committed, so there is no Gradle to install. Point the
+build at your SDK with either `ANDROID_HOME` or a `sdk.dir=` line in
+`android/local.properties` (git-ignored — it is machine specific by nature).
+
+`npm run build:android` auto-detects a JDK and SDK when the environment variables
+are unset (`scripts/android-gradle.cjs` checks the standard Linux, macOS and
+Windows install locations), and prints exactly what it picked. Override by
+exporting `JAVA_HOME` / `ANDROID_HOME`.
+
+### Debug APK
+
 ```bash
-npm run build:android   # build:mobile -> cap sync -> gradle assembleDebug
+npm install
+npm run build:android
 ```
 
-Produces:
+Produces `android/app/build/outputs/apk/debug/app-debug.apk` (debug-signed).
 
-```
-android/app/build/outputs/apk/debug/app-debug.apk
-```
-
-`build:android` runs three steps:
+Three steps, in order:
 
 1. `build:mobile` — Vite build, then copies `mobile/shim.js` into `dist/` and
    injects it into `dist/index.html`.
-2. `cap:sync` — copies the web build into the native projects.
-3. `android:gradle` — `assembleDebug` via the Gradle wrapper.
+2. `cap:sync` — copies the web build into the native projects and regenerates
+   `android/capacitor.settings.gradle`, `android/app/capacitor.build.gradle` and
+   `android/capacitor-cordova-android-plugins/`.
+3. `android:gradle` — `assembleDebug` through the Gradle wrapper.
 
-Requires a JDK and the Android SDK (defaults to `~/jdk/current` and
-`~/android-sdk`; override with `JAVA_HOME` / `ANDROID_HOME`).
+Step 2 is not optional. The renderer bundle and the Capacitor/Cordova glue under
+`android/` are **generated and git-ignored** — committing a built web bundle
+would guarantee stale APK builds. Running raw `./gradlew` without a prior
+`npm run cap:sync` produces a binary with no web app in it, so the launcher
+script fails loudly if `assets/public/index.html` is missing.
+
+`npm run build:android` works from a fresh clone on any machine; nothing depends
+on the original author's home directory.
+
+### Release bundle for Google Play
+
+```bash
+npm install
+npm run build:android:release
+```
+
+Produces `android/app/build/outputs/bundle/release/app-release.aab` — this is the
+file to upload to the Play Console. For a directly installable release APK
+instead, use `npm run build:android:release-apk`
+(`android/app/build/outputs/apk/release/app-release.apk`).
+
+Release specifics:
+
+- `applicationId` / package name — `com.ahmedkilwa.app` (also the Capacitor
+  `appId` in `capacitor.config.ts`, and the Electron `appId`; change all three
+  together if you ever rename it, and never rename it for an app already
+  published).
+- `versionCode` / `versionName` — `1` / `1.0`, in `android/app/build.gradle`.
+  **Bump `versionCode` for every Play upload**; Play rejects a duplicate or
+  lower one.
+- `minSdk` 24 (Android 7.0), `targetSdk` 36 — meets the current Play target-API
+  requirement.
+- `minifyEnabled false`, so `proguard-rules.pro` is inert. Turning R8 on is
+  optional for a Capacitor app; if you do, expect to add keep rules for the
+  bridge classes.
+- Upload keys belong to whoever builds it. Use a Play **upload key** and enrol
+  in Play App Signing, so the app signing key stays with Google.
 
 ### Release signing
 
 Release signing reads credentials from `android/app/keystore.properties`, which
 is **git-ignored along with `*.jks` / `*.keystore`**. Without that file the
-release build type simply skips signing, so debug builds and CI work without
-secrets present.
+release build type still succeeds but emits an **unsigned** artifact, which the
+Play Console rejects. The build prints a warning when this happens.
 
-To set up signing, create the file locally:
+To set up signing, create a keystore once and the properties file beside it:
+
+```bash
+keytool -genkeypair -v \
+  -keystore android/app/keystore/my-upload-key.jks \
+  -alias upload -keyalg RSA -keysize 2048 -validity 10000
+```
 
 ```properties
-storeFile=keystore/your-release.jks
+# android/app/keystore.properties   (never commit this)
+storeFile=keystore/my-upload-key.jks
 storePassword=...
-keyAlias=...
+keyAlias=upload
 keyPassword=...
 ```
 
+`storeFile` is resolved relative to `android/app/`, so keep the `.jks` inside
+`android/app/keystore/` — that path is already ignored.
+
 **Never commit the keystore or its passwords.** A leaked release key lets
-anyone ship an update the Play Store accepts as this app.
+anyone ship an update the Play Store accepts as this app. Back the keystore up
+somewhere private and safe: losing it means losing the ability to update the
+listing.
 
 ## Architecture
 
@@ -142,8 +208,8 @@ src/                # React renderer
   styles/           # tokens.css — semantic theme variables
 android/            # Capacitor Android project
 ios/                # Capacitor iOS project
-scripts/
-tests/              # Vitest suites
+scripts/              # build helpers: mobile bundle prep, portable Gradle launcher
+tests/                # Vitest suites
 ```
 
 The renderer never touches storage directly — it talks to `window.ahmedAPI`

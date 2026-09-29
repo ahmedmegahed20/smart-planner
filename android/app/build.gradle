@@ -39,6 +39,20 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             if (keystorePropertiesFile.exists()) {
                 signingConfig signingConfigs.release
+            } else if (gradle.startParameter.taskNames.any { it.toLowerCase().contains('release') }) {
+                // The release task still succeeds, it just emits an UNSIGNED
+                // artifact, which Google Play rejects with no obvious cause.
+                // Say so at configuration time instead of letting the failure
+                // surface hours later in the Play Console. Scoped to release
+                // invocations so ordinary debug builds stay quiet.
+                logger.warn(
+                    "\n" +
+                    "  ┌──────────────────────────────────────────────────────────────┐\n" +
+                    "  │ android/app/keystore.properties is missing.                  │\n" +
+                    "  │ A release build will be produced UNSIGNED.                    │\n" +
+                    "  │ Google Play will reject an unsigned .aab — see the            │\n" +
+                    "  │ \"Release signing\" section of README.md.                      │\n" +
+                    "  └──────────────────────────────────────────────────────────────┘")
             }
         }
     }

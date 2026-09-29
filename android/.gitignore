@@ -89,8 +89,14 @@ lint/tmp/
 # Android Profiling
 *.hprof
 
-# Cordova plugins for Capacitor
-capacitor-cordova-android-plugins
+# NOTE: capacitor-cordova-android-plugins is intentionally NOT ignored.
+# settings.gradle includes ':capacitor-cordova-android-plugins' unconditionally
+# and app/capacitor.build.gradle applies its cordova.variables.gradle, so the
+# module has to exist for Gradle to configure at all. The project is empty unless
+# a Cordova plugin is installed, is stable across `npx cap sync`, and without it
+# a fresh clone fails with
+#   "Could not read script .../cordova-cordova-android-plugins/cordova.variables.gradle".
+# Its own build output stays ignored via the `build/` rule above.
 
 # Copied web assets
 app/src/main/assets/public
